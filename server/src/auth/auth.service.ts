@@ -14,10 +14,17 @@ export class AuthService {
   async validateUser(username: string, pass: string): Promise<any> {
     const user = await this.usersService.findOne(username);
     if (user && this.cryptPasswordService.validate(pass, user.password)) {
-      const { password, ...result } = user;
-      return result;
+      return {
+        ...user,
+        password: undefined,
+      };
     }
     return null;
+  }
+
+  async isUserExist(usernameOrEmail: string): Promise<boolean> {
+    const user = await this.usersService.findOne(usernameOrEmail);
+    return !!user;
   }
 
   async login(user: any) {

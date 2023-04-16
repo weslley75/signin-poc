@@ -6,19 +6,20 @@ import { LocalStrategy } from './local.strategy';
 import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './constants';
 import { JwtStrategy } from './jwt.strategy';
-import { CryptPasswordModule } from '../crypt-password/crypt-password.module';
+import { AuthController } from './auth.controller';
+import { bcryptProvider } from '../crypt-password/bcrypt.provider';
 
 @Module({
   imports: [
     UsersModule,
-    CryptPasswordModule,
     PassportModule,
     JwtModule.register({
       secret: jwtConstants.secret,
       signOptions: { expiresIn: '10 minutes' },
     }),
   ],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy, bcryptProvider],
   exports: [AuthService],
+  controllers: [AuthController],
 })
 export class AuthModule {}
